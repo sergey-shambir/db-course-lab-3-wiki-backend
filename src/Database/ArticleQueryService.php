@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Database;
 
-use App\Common\Database\Connection;
 use App\Model\Data\ArticleSummary;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 class ArticleQueryService
 {
@@ -20,7 +21,9 @@ class ArticleQueryService
      */
     public function listArticles(): array
     {
-        $query = <<<SQL
+        try
+        {
+            $query = <<<SQL
             SELECT
               a.id,
               a.title,
@@ -30,12 +33,17 @@ class ArticleQueryService
               LEFT JOIN tag t on t.id = at.tag_id
             GROUP BY a.id
             SQL;
-        $stmt = $this->connection->execute($query);
+            $result = $this->connection->executeQuery($query);
 
-        return array_map(
-            fn($row) => $this->hydrateArticleSummary($row),
-            $stmt->fetchAll(\PDO::FETCH_ASSOC)
-        );
+            return array_map(
+                fn($row) => $this->hydrateArticleSummary($row),
+                $result->fetchAllAssociative()
+            );
+        }
+        catch (Exception $e)
+        {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     private function hydrateArticleSummary(array $row): ArticleSummary

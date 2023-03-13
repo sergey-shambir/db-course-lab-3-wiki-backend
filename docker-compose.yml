@@ -9,9 +9,7 @@ services:
     environment:
       # Параметры приложения
       - APP_ENV=dev
-      - APP_DATABASE_DSN=mysql:dbname=wiki_backend;host=wiki-backend-db
-      - APP_DATABASE_USER=wiki-backend-app
-      - APP_DATABASE_PASSWORD=kUUTyU7LssSc
+      - APP_DATABASE_DSN=pdo-mysql://wiki-backend-app:kUUTyU7LssSc@wiki-backend-db/wiki_backend
       # Параметры скрипта docker-entrypoint
       - USER_ID=${USER_ID:-1000}
       - USER_NAME=$USER

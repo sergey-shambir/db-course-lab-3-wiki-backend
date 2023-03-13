@@ -3,25 +3,25 @@ declare(strict_types=1);
 
 namespace App\Model\Service;
 
-use App\Common\Database\Synchronization;
+use App\Common\Doctrine\Synchronization;
 use App\Database\ArticleRepository;
-use App\Database\TagRepository;
-use App\Model\Article;
 use App\Model\Data\CreateArticleParams;
 use App\Model\Data\EditArticleParams;
+use App\Model\Domain\Article;
+use App\Model\Domain\TagDomainService;
 use App\Model\Exception\ArticleNotFoundException;
 
 class ArticleService
 {
     private Synchronization $synchronization;
     private ArticleRepository $articleRepository;
-    private TagRepository $tagRepository;
+    private TagDomainService $tagDomainService;
 
-    public function __construct(Synchronization $synchronization, ArticleRepository $articleRepository, TagRepository $tagRepository)
+    public function __construct(Synchronization $synchronization, ArticleRepository $articleRepository, TagDomainService $tagDomainService)
     {
         $this->synchronization = $synchronization;
         $this->articleRepository = $articleRepository;
-        $this->tagRepository = $tagRepository;
+        $this->tagDomainService = $tagDomainService;
     }
 
     /**
@@ -42,22 +42,19 @@ class ArticleService
     public function createArticle(CreateArticleParams $params): int
     {
         return $this->synchronization->doWithTransaction(function () use ($params) {
-            $this->tagRepository->addTags($params->getTags());
+            $tags = $this->tagDomainService->findOrCreateTags($params->getTags());
 
             $article = new Article(
-                null,
-                1,
                 $params->getTitle(),
                 '',
-                $params->getTags(),
-                new \DateTimeImmutable(),
-                $params->getUserId(),
-                null,
-                null
+                $tags,
+                $params->getUserId()
             );
-            return $this->articleRepository->save($article);
-        });
+            $this->articleRepository->add($article);
+            $this->articleRepository->flush();
 
+            return $article->getId();
+        });
     }
 
     /**
@@ -68,11 +65,11 @@ class ArticleService
     public function editArticle(EditArticleParams $params): void
     {
         $this->synchronization->doWithTransaction(function () use ($params) {
-            $this->tagRepository->addTags($params->getTags());
+            $tags = $this->tagDomainService->findOrCreateTags($params->getTags());
 
             $article = $this->getArticle($params->getId());
-            $article->edit($params->getUserId(), $params->getTitle(), $params->getContent(), $params->getTags());
-            $this->articleRepository->save($article);
+            $article->edit($params->getUserId(), $params->getTitle(), $params->getContent(), $tags);
+            $this->articleRepository->flush();
         });
     }
 
