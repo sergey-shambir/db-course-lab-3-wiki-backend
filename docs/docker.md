@@ -36,8 +36,11 @@ docker-compose ps
 # Смотреть логи контейнеров (Ctrl+C для остановки)
 docker-compose logs -f
 
-# Открыть сессию bash в контейнере
+# Открыть сессию bash в контейнере приложения
 docker/bin/wiki-backend-app-bash
+
+# Открыть сессию mysql в контейнере MySQL
+docker/bin/wiki-backend-db
 
 # Остановить контейнеры
 docker-compose down --remove-orphans

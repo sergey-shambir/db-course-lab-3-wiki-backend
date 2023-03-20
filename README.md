@@ -18,9 +18,7 @@
 
 1. Установить docker и docker-compose
 2. Запустить контейнеры по инструкции из файла `docs/docker.md`
-3. Открыть в MySQL Workbench и выполнить последовательно SQL запросы из двух файлов:
-   - `data/create_user.sql`
-   - `data/init.sql`
+3. Войти в контейнер скриптом `docker/bin/wiki-backend-app-bash` и выполнить `bin/doctrine-migrations --no-interaction migrations:migrate --allow-no-migration`
 4. Открыть в браузере http://localhost
 
 В идеале у вас:
@@ -33,13 +31,13 @@
 
 1. Установить MySQL 8 и PHP 8.2
 2. Запустить MySQL server
-3. Открыть в MySQL Workbench и выполнить последовательно SQL запросы из двух файлов:
-   - `data/create_user.sql`
-   - `data/init.sql`
-4. Открыть консоль и запустить отладочный сервер PHP:
+3. Открыть в MySQL Workbench и выполнить SQL запросы из файла `data/create_user.sql`
+4. Из консоли в каталоге проекта выполнить `bin/doctrine-migrations --no-interaction migrations:migrate --allow-no-migration`
+   - в случае проблем можно заменить на `php vendor\bin\doctrine-migrations --no-interaction migrations:migrate --allow-no-migration`
+5. Из консоли и запустить отладочный сервер PHP:
     - `cd public`
     - `php -S localhost:8888`
-5. Открыть в браузере `http://localhost:8888/articles/list` - будет пустой JSON массив
+6. Открыть в браузере `http://localhost:8888/articles/list` - будет пустой JSON массив
 
 ## Проверка работы
 
