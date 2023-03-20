@@ -4,9 +4,10 @@
 
 В этом примере есть:
 
-1. Работа с транзакциями (см. классы `ArticleService` и `Synchronization`)
-2. INSERT ODKU, также известный как UPSERT (см. классы `ArticleRepository`, `TagRepository`)
-3. Применение оптимистичной блокировки (см. класс `ArticleRepository`)
+1. Работа с ORM Doctrine (см. классы `Article`, `Tag`, `ArticleRepository`, `TagRepository`)
+2. Работа с транзакциями (см. классы `ArticleService` и `Synchronization`)
+3. Применение оптимистичной блокировки (см. `ORM\Version` в классе `Article` и определение колонки `version` в миграциях)
+4. Миграции (см. `src/Migrations`, `migrations.php`, `migrations-db.php`)
 
 ## Схема БД
 
@@ -35,8 +36,8 @@
 4. Из консоли в каталоге проекта выполнить `bin/doctrine-migrations --no-interaction migrations:migrate --allow-no-migration`
    - в случае проблем можно заменить на `php vendor\bin\doctrine-migrations --no-interaction migrations:migrate --allow-no-migration`
 5. Из консоли и запустить отладочный сервер PHP:
-    - `cd public`
-    - `php -S localhost:8888`
+   - `cd public`
+   - `php -S localhost:8888`
 6. Открыть в браузере `http://localhost:8888/articles/list` - будет пустой JSON массив
 
 ## Проверка работы

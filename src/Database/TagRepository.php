@@ -5,7 +5,6 @@ namespace App\Database;
 
 use App\Model\Domain\Tag;
 use Doctrine\DBAL\ArrayParameterType;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 

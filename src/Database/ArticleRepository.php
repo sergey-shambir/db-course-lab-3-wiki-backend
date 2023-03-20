@@ -5,7 +5,6 @@ namespace App\Database;
 
 use App\Model\Domain\Article;
 use Doctrine\DBAL\ArrayParameterType;
-use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
